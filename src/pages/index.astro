@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<Base title="Surya Kant Kashyap — observability, metrics, and the systems behind them" description="Surya Kant Kashyap is a senior software engineer working on metrics and observability at Kloudfuse. Writes deeply about Prometheus, PromQL, and the systems behind production telemetry.">
+  <section class="mb-16">
+    <p class="font-sans text-sm uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-3">Surya Kant Kashyap</p>
+    <h1 class="text-3xl sm:text-4xl font-semibold leading-tight tracking-tight mb-5 text-balance">
+      I build the systems that make observability data useful at scale.
+    </h1>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-3">
+      Senior software engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>, working on the metrics query path — PromQL, Pinot-backed storage, rule-based aggregation, and the pieces around them. I write down the parts I had to learn the hard way so the next person doesn't have to.
+    </p>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
+      This site is the long-form companion to that work: deep dives on metric internals, cardinality, histograms, and the production-systems thinking that ties them together.
+    </p>
+  </section>
+
+  <section class="mb-16">
+    <div class="flex items-baseline justify-between mb-5">
+      <h2 class="font-sans font-semibold text-base uppercase tracking-wider text-[color:var(--color-ink-faint)]">Recent posts</h2>
+      <a href="/posts/" class="font-sans text-sm">All posts →</a>
+    </div>
+    <ul class="space-y-6">
+      {posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.id}/`} class="!no-underline group">
+            <h3 class="font-sans font-medium text-lg !text-[color:var(--color-ink)] group-hover:!text-[color:var(--color-accent)] mb-1 leading-snug">
+              {post.data.title}
+            </h3>
+            <p class="text-[color:var(--color-ink-muted)] leading-snug mb-1">{post.data.description}</p>
+            <p class="font-sans text-xs text-[color:var(--color-ink-faint)]">
+              {fmt.format(post.data.date)} · {post.data.tags.join(' · ')}
+            </p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mb-16">
+    <h2 class="font-sans font-semibold text-base uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">What I do, in two lines</h2>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-3">
+      I write the query path for <strong class="!text-[color:var(--color-ink)] font-medium">Kloudfuse's metrics product</strong> — a Prometheus-compatible service that fronts Apache Pinot. The work spans PromQL semantics, rollup planning, histogram correctness, query priority and rule evaluation. Some of that turns into open writing on this site; some of it stays internal but shapes the questions I'm thinking about.
+    </p>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
+      If you're hiring for senior/staff backend or observability work, the <a href="/hire/">hire-me page</a> spells out what kind of engagements I'm open to.
+    </p>
+  </section>
+</Base>

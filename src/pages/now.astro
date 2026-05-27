@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+
+const updated = new Date('2026-05-27');
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Now — Surya Kant Kashyap" description="What I'm working on right now. A snapshot, not a roadmap.">
+  <article class="prose-post">
+    <h1 class="text-3xl font-semibold tracking-tight mb-3">Now</h1>
+    <p class="font-sans text-sm text-[color:var(--color-ink-faint)] mb-10">
+      Updated {fmt.format(updated)} · <a href="https://nownownow.com/about">about /now pages</a>
+    </p>
+
+    <h2>At work</h2>
+    <p>
+      Shipping the configdb-driven metric shaping + derived metrics work at <a href="https://www.kloudfuse.com/">Kloudfuse</a>. The server-side and rule manager pieces are merged; the admin UI, docs, and a follow-up "Drop preview on the list view" UX improvement are in flight.
+    </p>
+
+    <h2>What I'm reading</h2>
+    <ul>
+      <li>The Pinot codebase — specifically the rollup planner and the per-segment query path.</li>
+      <li>Whatever Charity Majors writes about observability and SRE staffing.</li>
+      <li>A re-read of <em>Database Internals</em> (Petrov), now with more context about column stores.</li>
+    </ul>
+
+    <h2>What I'm writing</h2>
+    <ul>
+      <li>Slowly turning this site from a content dump into something that feels like a real long-form home.</li>
+      <li>A planned post on PromQL rollup-table planning — how a query engine decides which resolution to read from, and the failure modes when it picks wrong.</li>
+    </ul>
+
+    <h2>Off-keyboard</h2>
+    <p>
+      Walking a lot. Trying to maintain a single espresso pour I'm actually proud of. Otherwise quiet.
+    </p>
+  </article>
+</Base>

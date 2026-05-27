@@ -1,0 +1,33 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+}
+const { title, description, date, tags } = Astro.props;
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={title} description={description}>
+  <article class="prose-post">
+    <header class="mb-10">
+      <h1 class="text-3xl font-semibold leading-tight mb-3 text-balance">{title}</h1>
+      <p class="text-[color:var(--color-ink-muted)] mb-3 leading-snug">{description}</p>
+      <div class="font-sans text-sm text-[color:var(--color-ink-faint)] flex flex-wrap gap-x-3 gap-y-1">
+        <time datetime={date.toISOString()}>{fmt.format(date)}</time>
+        {tags.length > 0 && (
+          <span>·</span>
+          <span>{tags.join(' · ')}</span>
+        )}
+      </div>
+    </header>
+    <slot />
+    <hr />
+    <p class="font-sans text-sm text-[color:var(--color-ink-muted)]">
+      ← <a href="/posts/">All posts</a> &nbsp;·&nbsp; Found a mistake? <a href="mailto:suryakant.kashyap@kloudfuse.com">Email me</a> or file an issue on <a href="https://github.com/suryakantk94/observability-deep-dives">the source repo</a>.
+    </p>
+  </article>
+</Base>
