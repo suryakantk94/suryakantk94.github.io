@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "build:embeddings": "node scripts/build-embeddings.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",
@@ -18,5 +19,8 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.8",
     "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3"
   }
 }

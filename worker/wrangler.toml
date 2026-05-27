@@ -1,0 +1,23 @@
+name = "ask-my-notes"
+main = "src/index.ts"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+workers_dev = true
+
+[ai]
+binding = "AI"
+
+# Rate-limit KV namespace. Create with:
+#   wrangler kv namespace create RATE_LIMIT
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "f6b33ef1d2f64963abf07453470c0dae"
+
+[vars]
+ALLOWED_ORIGIN = "https://suryakantk94.github.io"
+DAILY_LIMIT_PER_IP = "20"
+EMBED_MODEL = "@cf/baai/bge-base-en-v1.5"
+LLM_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+TOP_K = "4"
