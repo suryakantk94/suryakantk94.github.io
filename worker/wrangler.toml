@@ -13,7 +13,7 @@ binding = "AI"
 # then paste the returned id below.
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "REPLACE_WITH_KV_ID"
+id = "f6b33ef1d2f64963abf07453470c0dae"
 
 [vars]
 ALLOWED_ORIGIN = "https://suryakantk94.github.io"

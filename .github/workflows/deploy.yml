@@ -32,6 +32,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          PUBLIC_ASK_ENDPOINT: https://ask-my-notes.suryakantk94.workers.dev/ask
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
