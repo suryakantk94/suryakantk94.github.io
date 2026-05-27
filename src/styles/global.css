@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "system-ui", "Segoe UI", "Roboto", sans-serif;
+  --font-serif: "Source Serif 4", "Iowan Old Style", "Charter", "Georgia", serif;
+  --font-mono: "JetBrains Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #555;
+  --color-ink-faint: #888;
+  --color-paper: #fdfcf9;
+  --color-rule: #e8e6e0;
+  --color-accent: #b54a1a;
+}
+
+html {
+  font-family: var(--font-serif);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover { text-decoration-thickness: 2px; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+pre {
+  padding: 1rem 1.1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+blockquote {
+  border-left: 3px solid var(--color-rule);
+  padding-left: 1rem;
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-rule);
+  margin: 2.5rem 0;
+}
+
+.prose-post :where(h2) {
+  margin-top: 2.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.5rem;
+}
+.prose-post :where(h3) {
+  margin-top: 2rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+}
+.prose-post :where(p, ul, ol, blockquote, pre, table) {
+  margin-block: 0.9rem;
+}
+.prose-post :where(ul, ol) { padding-left: 1.4rem; }
+.prose-post :where(li) { margin-block: 0.25rem; }
+.prose-post :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+.prose-post :where(th, td) {
+  border: 1px solid var(--color-rule);
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+}
+.prose-post :where(th) {
+  background: rgba(0, 0, 0, 0.02);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+.prose-post :where(p code, li code, td code, th code) {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}

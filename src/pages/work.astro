@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+
+const cases = [
+  {
+    title: 'Rule-based metric shaping',
+    period: 'Kloudfuse · 2026',
+    summary:
+      'Designed and shipped a config-driven shaping pipeline that lets operators collapse a high-cardinality metric down to the dimensions they actually need, with the shaped output queryable as a drop-in replacement for the source. Histogram support (classic + native), an opt-in destructive mode that diverts raw data to a staging table, a synthesised PromQL expression per rule, and a live "Drop preview" UI driven off a /preview endpoint.',
+    impact: [
+      'Reduced one production metric\'s series count by 56% in the validation cluster (73 → 32 serieses) with no loss of histogram_quantile-queryability.',
+      'Shipped end-to-end across query-service, config-mgmt-service, and the React admin UI.',
+      'Server-side validation matrix covers every (source-type × aggregation × BY/WITHOUT) combination — bad rules are rejected at create time, not at eval time.',
+    ],
+    links: [
+      { href: '/posts/rule-based-metric-shaping/', label: 'Deep dive' },
+      { href: '/posts/cardinality-control-patterns/', label: 'Context' },
+    ],
+  },
+  {
+    title: 'Query priority + per-stream timeout propagation',
+    period: 'Kloudfuse · 2026',
+    summary:
+      'Generalised the existing single-priority query path into a multi-stream model (metrics vs APM today; more later). Each request now carries a pre-resolved priority + timeout map per stream, surfaced into Pinot SQL as scheduler_priority and timeoutMs options on every call.',
+    impact: [
+      'Scheduled queries (alert eval, in-process rule manager, saved-view refresh) get cluster-wide defaults from configdb, polled every 60s.',
+      'All other traffic resolves per-stream from the request\'s parsed auth headers.',
+      'Generic resolution lives in kfuse-golib so trace-query-service, logs-query-service, and rum-query-service can reuse it.',
+    ],
+    links: [],
+  },
+  {
+    title: 'PromQL compliance — bucket alignment & rollup correctness',
+    period: 'Kloudfuse · 2025–2026',
+    summary:
+      'Closed a long-tail of correctness gaps in the Pinot-backed PromQL engine: le-filter handling on classic histograms, fall-back to legacy rollup tables when the new ones are gappy, sum-by-le promotion to a per-bucket rollup column, and last-column carry-forward through the rollup boundary.',
+    impact: [
+      'PromQL compliance suite added 30+ histogram-specific test cases; previously-failing queries now pass against both raw and rollup paths.',
+      'Cardinality and labels APIs gained a legacy-table fallback so customers on older Pinot ingest paths keep getting correct results during migration.',
+    ],
+    links: [],
+  },
+];
+---
+
+<Base title="Work — Surya Kant Kashyap" description="Selected work and case studies — what shipped, with the numbers.">
+  <article class="prose-post">
+    <h1 class="text-3xl font-semibold tracking-tight mb-3">Work</h1>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-12">
+      A few selected things I've shipped at <a href="https://www.kloudfuse.com/">Kloudfuse</a>. Most of the technical work lives behind an enterprise login, so this page is a summarised view; each entry links to the public write-ups where they exist.
+    </p>
+
+    {cases.map((c) => (
+      <section class="mb-16">
+        <p class="font-sans text-xs uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-2">{c.period}</p>
+        <h2 class="text-2xl mb-3">{c.title}</h2>
+        <p>{c.summary}</p>
+        {c.impact.length > 0 && (
+          <>
+            <p class="font-sans font-semibold text-sm mt-5 mb-2 text-[color:var(--color-ink)]">Impact</p>
+            <ul>
+              {c.impact.map((line) => <li>{line}</li>)}
+            </ul>
+          </>
+        )}
+        {c.links.length > 0 && (
+          <p class="font-sans text-sm mt-4">
+            {c.links.map((l, i) => (
+              <>
+                {i > 0 && ' · '}
+                <a href={l.href}>{l.label}</a>
+              </>
+            ))}
+          </p>
+        )}
+      </section>
+    ))}
+
+    <hr />
+    <p class="font-sans text-sm text-[color:var(--color-ink-muted)]">
+      Want the longer story — including the parts I can't put on a public page? <a href="/hire/">Get in touch</a>.
+    </p>
+  </article>
+</Base>

@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const byYear = new Map<number, typeof posts>();
+for (const p of posts) {
+  const y = p.data.date.getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<Base title="Posts — Surya Kant Kashyap" description="All long-form posts on observability, metrics, and the production systems behind them.">
+  <header class="mb-12">
+    <h1 class="text-3xl font-semibold tracking-tight mb-3">Posts</h1>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
+      Notes I take while figuring out how production metrics systems actually work. Most stay in one of three lanes: PromQL, cardinality, and the storage path beneath them.
+    </p>
+  </header>
+
+  {years.map((year) => (
+    <section class="mb-12">
+      <h2 class="font-sans font-semibold text-sm uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">{year}</h2>
+      <ul class="space-y-6">
+        {byYear.get(year)!.map((post) => (
+          <li>
+            <a href={`/posts/${post.id}/`} class="!no-underline group">
+              <h3 class="font-sans font-medium text-lg !text-[color:var(--color-ink)] group-hover:!text-[color:var(--color-accent)] mb-1 leading-snug">
+                {post.data.title}
+              </h3>
+              <p class="text-[color:var(--color-ink-muted)] leading-snug mb-1">{post.data.description}</p>
+              <p class="font-sans text-xs text-[color:var(--color-ink-faint)]">
+                {fmt.format(post.data.date)} · {post.data.tags.join(' · ')}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>

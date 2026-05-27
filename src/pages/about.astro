@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About — Surya Kant Kashyap" description="Background, what I work on, and how I think about the craft.">
+  <article class="prose-post">
+    <h1 class="text-3xl font-semibold tracking-tight mb-6">About</h1>
+
+    <p>
+      I'm a senior software engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>, where I work on the metrics query service — a Prometheus-compatible query API that fronts Apache Pinot. Day to day that means PromQL semantics, rule evaluation, cardinality work, histogram correctness, and the storage-path plumbing that ties it all together.
+    </p>
+
+    <p>
+      Before Kloudfuse I worked across a few different observability and platform-engineering teams. The through-line has always been the same: production systems that emit a lot of telemetry and need to keep that telemetry both usable and affordable. The fun part is that the constraints push you back into the fundamentals — what a metric actually is, what a histogram approximates, what a query plan costs to run.
+    </p>
+
+    <h2>How I think about the work</h2>
+
+    <p>
+      I'm drawn to systems where the abstraction is leaking on purpose — where you have to understand the storage, the query engine, and the user-facing semantics together to get anything right. Observability platforms are like that almost by definition. The pretty PromQL query at the top of the dashboard depends on bucket alignment, label cardinality, the rollup pipeline's lookback, and a half-dozen other things the user shouldn't have to think about — but somebody does.
+    </p>
+
+    <p>
+      My approach: read the code, write down the model, then test the model against production reality. The posts on this site are the "write down the model" step. If a post reads like a tutorial, that's me having had to learn it the hard way once.
+    </p>
+
+    <h2>Off-hours</h2>
+
+    <p>
+      Long walks, espresso, mechanical keyboards, the occasional small open-source contribution. I read more than I write. Most of what I write that isn't code ends up here.
+    </p>
+
+    <h2>Contact</h2>
+
+    <ul>
+      <li>Email: <a href="mailto:suryakant.kashyap@kloudfuse.com">suryakant.kashyap@kloudfuse.com</a></li>
+      <li>GitHub: <a href="https://github.com/suryakantk94">suryakantk94</a> (personal) · <a href="https://github.com/suryakantkk">suryakantkk</a> (work)</li>
+      <li>LinkedIn: <a href="https://www.linkedin.com/in/suryakantk/">suryakantk</a></li>
+    </ul>
+  </article>
+</Base>
