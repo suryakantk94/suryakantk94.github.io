@@ -1,0 +1,276 @@
+---
+// Renders the "ask my notes" chat widget — a floating button that
+// expands into a panel. The Worker URL is provided via PUBLIC env or
+// falls back to a placeholder that prints a friendly error.
+const askEndpoint = import.meta.env.PUBLIC_ASK_ENDPOINT || '';
+---
+
+<button id="ask-fab" aria-label="Ask my notes" type="button">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span>Ask my notes</span>
+</button>
+
+<aside id="ask-panel" hidden aria-hidden="true">
+  <header>
+    <span class="title">Ask my notes</span>
+    <button id="ask-close" aria-label="Close" type="button">✕</button>
+  </header>
+  <p class="hint">Ask a question about the posts on this site. Answers cite the posts they came from. Powered by Cloudflare Workers AI.</p>
+  <div id="ask-log" role="log" aria-live="polite"></div>
+  <form id="ask-form">
+    <textarea id="ask-input" placeholder="e.g. when should I use a metric shaping rule vs a derived metric?" rows="2" maxlength="500" required></textarea>
+    <button type="submit" id="ask-submit">Ask</button>
+  </form>
+</aside>
+
+<script is:inline define:vars={{ askEndpoint }}>
+  const ENDPOINT = askEndpoint;
+
+  const fab = document.getElementById('ask-fab');
+  const panel = document.getElementById('ask-panel');
+  const closeBtn = document.getElementById('ask-close');
+  const form = document.getElementById('ask-form');
+  const input = document.getElementById('ask-input');
+  const submit = document.getElementById('ask-submit');
+  const log = document.getElementById('ask-log');
+
+  const open = () => {
+    panel.hidden = false;
+    panel.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input.focus(), 50);
+  };
+  const close = () => {
+    panel.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+  };
+  fab.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) close(); });
+
+  function appendTurn(role, body, sources) {
+    const turn = document.createElement('div');
+    turn.className = `turn turn-${role}`;
+    const label = document.createElement('div');
+    label.className = 'turn-label';
+    label.textContent = role === 'user' ? 'You' : 'My notes';
+    const text = document.createElement('div');
+    text.className = 'turn-text';
+    text.textContent = body;
+    turn.appendChild(label);
+    turn.appendChild(text);
+    if (sources && sources.length) {
+      const src = document.createElement('div');
+      src.className = 'turn-sources';
+      src.innerHTML = 'Sources: ' + sources
+        .map((s) => `<a href="${s.url}">${s.title}</a>`)
+        .join(' · ');
+      turn.appendChild(src);
+    }
+    log.appendChild(turn);
+    log.scrollTop = log.scrollHeight;
+    return text;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+
+    if (!ENDPOINT) {
+      appendTurn('error', 'Chat endpoint not configured yet. The Worker hasn\'t been deployed. (Set PUBLIC_ASK_ENDPOINT at build time.)');
+      return;
+    }
+
+    appendTurn('user', question);
+    input.value = '';
+    submit.disabled = true;
+    const answerTarget = appendTurn('assistant', '…');
+
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        answerTarget.textContent = errJson.message || `Error ${res.status}`;
+        return;
+      }
+
+      const sourcesHeader = res.headers.get('X-Sources');
+      let sources = [];
+      if (sourcesHeader) {
+        try { sources = JSON.parse(decodeURIComponent(sourcesHeader)); } catch {}
+      }
+
+      // Cloudflare Workers AI streams as SSE lines: `data: {"response":"...","p":"..."}`
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let accumulated = '';
+      answerTarget.textContent = '';
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith('data:')) continue;
+          const data = trimmed.slice(5).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const obj = JSON.parse(data);
+            const delta = obj.response || '';
+            accumulated += delta;
+            answerTarget.textContent = accumulated;
+            log.scrollTop = log.scrollHeight;
+          } catch {}
+        }
+      }
+
+      if (sources.length) {
+        const src = document.createElement('div');
+        src.className = 'turn-sources';
+        src.innerHTML = 'Sources: ' + sources
+          .map((s) => `<a href="${s.url}">${s.title}</a>`)
+          .join(' · ');
+        answerTarget.parentElement.appendChild(src);
+      }
+    } catch (err) {
+      answerTarget.textContent = 'Network error. Try again.';
+    } finally {
+      submit.disabled = false;
+      input.focus();
+    }
+  });
+</script>
+
+<style>
+  #ask-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 0;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    transition: transform 0.1s ease;
+  }
+  #ask-fab:hover { transform: translateY(-1px); background: var(--color-accent); }
+
+  #ask-panel {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    width: min(380px, calc(100vw - 3rem));
+    max-height: min(640px, calc(100vh - 7rem));
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule);
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 50;
+    font-family: var(--font-sans);
+  }
+  #ask-panel header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-rule);
+    background: rgba(0, 0, 0, 0.02);
+  }
+  #ask-panel header .title { font-weight: 600; font-size: 0.95rem; }
+  #ask-close {
+    border: 0;
+    background: transparent;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+  #ask-close:hover { background: rgba(0,0,0,0.05); color: var(--color-ink); }
+  .hint {
+    padding: 0.6rem 1rem;
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+    border-bottom: 1px solid var(--color-rule);
+    margin: 0;
+  }
+  #ask-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .turn-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.25rem;
+  }
+  .turn-text { white-space: pre-wrap; color: var(--color-ink); }
+  .turn-user .turn-text { color: var(--color-ink-muted); font-style: italic; }
+  .turn-error .turn-text { color: #b54a1a; }
+  .turn-sources {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+  .turn-sources a { color: var(--color-accent); text-decoration: underline; }
+  #ask-form {
+    border-top: 1px solid var(--color-rule);
+    padding: 0.6rem 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+  #ask-input {
+    flex: 1;
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: none;
+    background: white;
+  }
+  #ask-input:focus { outline: 2px solid var(--color-accent); outline-offset: -1px; }
+  #ask-submit {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border: 0;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  #ask-submit:disabled { opacity: 0.5; cursor: wait; }
+  #ask-submit:hover:not(:disabled) { background: var(--color-accent); }
+</style>
