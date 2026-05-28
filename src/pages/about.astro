@@ -2,22 +2,26 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="About — Suryakant Kashyap" description="Background, what I work on, and how I think about the craft.">
+<Base title="About — Suryakant Kashyap" description="AI engineer with a systems background. How I came at AI from the infrastructure side, and how the two halves connect.">
   <article class="prose-post">
     <h1 class="text-3xl font-semibold tracking-tight mb-6">About</h1>
 
     <p>
-      I'm a senior software engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>, where I work on the metrics query service — a Prometheus-compatible query API that fronts Apache Pinot. Day to day that means PromQL semantics, rule evaluation, cardinality work, histogram correctness, and the storage-path plumbing that ties it all together.
+      I'm an AI engineer with a systems background — currently a senior software engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>. The day job is the metrics query path: a Prometheus-compatible API that fronts Apache Pinot. A growing slice of the day job, and most of the side work, is the LLM layer on top — retrieval pipelines, eval harnesses, prompt iteration, the operational realities of running language models against real customer data.
     </p>
 
     <p>
-      Before Kloudfuse I worked across a few different observability and platform-engineering teams. The through-line has always been the same: production systems that emit a lot of telemetry and need to keep that telemetry both usable and affordable. The fun part is that the constraints push you back into the fundamentals — what a metric actually is, what a histogram approximates, what a query plan costs to run.
+      I came at AI from the systems side rather than the other direction. In 2023 I built <a href="/posts/aida-natural-language-to-promql/">AIDA</a> — a natural-language-to-PromQL interface backed by three LLMs in parallel — when "RAG" wasn't a household term yet. That prototype taught me what every AI engineer eventually learns: the model is the easy part. Retrieval quality, eval coverage, prompt iteration loop, inference cost, latency budget — those are where the system either earns its keep or doesn't.
+    </p>
+
+    <p>
+      Before AIDA and Kloudfuse I worked across a few observability and platform-engineering teams. The through-line has always been the same: production systems that emit a lot of data and need to keep that data both useful and affordable. The fun part is that the constraints — both AI-product constraints and observability constraints — push you back into the same fundamentals: what does the user actually want, what does it cost to give them, and how do you keep the answer honest.
     </p>
 
     <h2>How I think about the work</h2>
 
     <p>
-      I'm drawn to systems where the abstraction is leaking on purpose — where you have to understand the storage, the query engine, and the user-facing semantics together to get anything right. Observability platforms are like that almost by definition. The pretty PromQL query at the top of the dashboard depends on bucket alignment, label cardinality, the rollup pipeline's lookback, and a half-dozen other things the user shouldn't have to think about — but somebody does.
+      I'm drawn to systems where the abstraction is leaking on purpose — where you have to understand the storage, the query engine, and the user-facing semantics together to get anything right. LLM products and observability platforms are both like that almost by definition. The pretty answer that comes out of the model — or the dashboard — depends on retrieval shape, context window budget, bucket alignment, label cardinality, and a half-dozen other things the user shouldn't have to think about. But somebody does.
     </p>
 
     <p>

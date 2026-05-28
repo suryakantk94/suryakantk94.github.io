@@ -9,17 +9,17 @@ const posts = (await getCollection('posts'))
 const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
-<Base title="Suryakant Kashyap — observability, metrics, and the systems behind them" description="Suryakant Kashyap is a senior software engineer working on metrics and observability at Kloudfuse. Writes deeply about Prometheus, PromQL, and the systems behind production telemetry.">
+<Base title="Suryakant Kashyap — LLMs, retrieval, and the systems that make them work in production" description="Suryakant Kashyap is an AI engineer with a systems background. Writes about LLMs, retrieval-augmented generation, evals, and the production infrastructure underneath modern AI products.">
   <section class="mb-16">
     <p class="font-sans text-sm uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-3">Suryakant Kashyap</p>
     <h1 class="text-3xl sm:text-4xl font-semibold leading-tight tracking-tight mb-5 text-balance">
-      I build the systems that make observability data useful at scale.
+      I build AI systems that survive production — and write down what I learn doing it.
     </h1>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-3">
-      Senior software engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>, working on the metrics query path — PromQL, Pinot-backed storage, rule-based aggregation, and the pieces around them. I write down the parts I had to learn the hard way so the next person doesn't have to.
+      AI engineer with a systems background. I work on the parts of LLM products that don't make demo videos: retrieval pipelines, evals that catch regressions, prompt iteration that doesn't melt the bill, and the infrastructure that keeps it all running.
     </p>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
-      This site is the long-form companion to that work: deep dives on metric internals, cardinality, histograms, and the production-systems thinking that ties them together.
+      Currently a senior engineer at <a href="https://www.kloudfuse.com/">Kloudfuse</a>, where the AI work sits on top of a metrics and observability stack I've spent years building. The depth in the stack is what makes the AI layer on top honest. This site is the long-form record of both halves.
     </p>
   </section>
 
@@ -46,12 +46,15 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', 
   </section>
 
   <section class="mb-16">
-    <h2 class="font-sans font-semibold text-base uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">What I do, in two lines</h2>
+    <h2 class="font-sans font-semibold text-base uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">What I work on</h2>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-3">
-      I write the query path for <strong class="!text-[color:var(--color-ink)] font-medium">Kloudfuse's metrics product</strong> — a Prometheus-compatible service that fronts Apache Pinot. The work spans PromQL semantics, rollup planning, histogram correctness, query priority and rule evaluation. Some of that turns into open writing on this site; some of it stays internal but shapes the questions I'm thinking about.
+      <strong class="!text-[color:var(--color-ink)] font-medium">AI / ML.</strong> Retrieval-augmented generation, eval design, prompt iteration, and the operational ceiling — what an AI feature actually costs at scale, where it breaks, and how you stop it from regressing every time a model changes. I built <a href="/posts/aida-natural-language-to-promql/">AIDA</a> — a natural-language-to-PromQL prototype — in 2023, before "RAG" was the household term.
+    </p>
+    <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-3">
+      <strong class="!text-[color:var(--color-ink)] font-medium">Systems.</strong> I write the metrics query path for <strong class="!text-[color:var(--color-ink)] font-medium">Kloudfuse</strong> — a Prometheus-compatible API that fronts Apache Pinot. PromQL semantics, rollup planning, histogram correctness, query priority, rule evaluation. Years of this is what makes the AI half of the work credible.
     </p>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
-      The <a href="/about/">about page</a> has more on background and how to get in touch.
+      The <a href="/about/">about page</a> connects the two halves; the <a href="/work/">work page</a> has the case studies.
     </p>
   </section>
 </Base>
