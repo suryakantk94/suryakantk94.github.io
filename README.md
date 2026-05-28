@@ -1,6 +1,6 @@
 # suryakantk94.github.io
 
-Personal site of Surya Kant Kashyap — long-form notes on observability, metrics internals, and the production systems behind them.
+Personal site of Suryakant Kashyap — long-form notes on observability, metrics internals, and the production systems behind them.
 
 Built with [Astro](https://astro.build) + MDX, deployed to GitHub Pages.
 
