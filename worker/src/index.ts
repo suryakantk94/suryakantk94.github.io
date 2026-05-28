@@ -49,7 +49,7 @@ function buildPrompt(question: string, retrieved: { chunk: ChunkRecord; score: n
     )
     .join('\n\n---\n\n');
 
-  return `You are answering questions about Surya Kant Kashyap's technical blog posts on observability, metrics, and PromQL. Answer using ONLY the sources below. If the sources don't cover the question, say so directly — don't guess. Quote source titles when you reference them.
+  return `You are answering questions about Suryakant Kashyap's technical blog posts on observability, metrics, and PromQL. Answer using ONLY the sources below. If the sources don't cover the question, say so directly — don't guess. Quote source titles when you reference them.
 
 ${context}
 
