@@ -8,28 +8,29 @@ const posts = (await getCollection('posts'))
 
 const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const byYear = new Map<number, typeof posts>();
-for (const p of posts) {
-  const y = p.data.date.getFullYear();
-  if (!byYear.has(y)) byYear.set(y, []);
-  byYear.get(y)!.push(p);
-}
-const years = [...byYear.keys()].sort((a, b) => b - a);
+const AI_TAGS = new Set(['llm', 'rag', 'ai', 'ml', 'evals', 'embeddings']);
+const isAI = (p: (typeof posts)[number]) =>
+  p.data.tags.some((t: string) => AI_TAGS.has(t.toLowerCase()));
+
+const groups = [
+  { title: 'AI & ML', posts: posts.filter(isAI) },
+  { title: 'Systems & Observability', posts: posts.filter((p) => !isAI(p)) },
+].filter((g) => g.posts.length > 0);
 ---
 
-<Base title="Posts — Suryakant Kashyap" description="All long-form posts on observability, metrics, and the production systems behind them.">
+<Base title="Posts — Suryakant Kashyap" description="Long-form posts on LLMs, retrieval, evals, and the production systems they run on.">
   <header class="mb-12">
     <h1 class="text-3xl font-semibold tracking-tight mb-3">Posts</h1>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)]">
-      Notes I take while figuring out how production metrics systems actually work. Most stay in one of three lanes: PromQL, cardinality, and the storage path beneath them.
+      Notes I take while figuring out how production AI and metrics systems actually work. Grouped by the part of the stack they're about, newest first within each group.
     </p>
   </header>
 
-  {years.map((year) => (
+  {groups.map((group) => (
     <section class="mb-12">
-      <h2 class="font-sans font-semibold text-sm uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">{year}</h2>
+      <h2 class="font-sans font-semibold text-sm uppercase tracking-wider text-[color:var(--color-ink-faint)] mb-5">{group.title}</h2>
       <ul class="space-y-6">
-        {byYear.get(year)!.map((post) => (
+        {group.posts.map((post) => (
           <li>
             <a href={`/posts/${post.id}/`} class="!no-underline group">
               <h3 class="font-sans font-medium text-lg !text-[color:var(--color-ink)] group-hover:!text-[color:var(--color-accent)] mb-1 leading-snug">

@@ -1,6 +1,6 @@
 # suryakantk94.github.io
 
-Personal site of Suryakant Kashyap — long-form notes on observability, metrics internals, and the production systems behind them.
+Personal site of Suryakant Kashyap — AI engineer with a systems background. Long-form notes on LLMs, retrieval, evals, and the production systems they run on.
 
 Built with [Astro](https://astro.build) + MDX, deployed to GitHub Pages.
 
@@ -15,7 +15,7 @@ npm run preview # serve the built site
 
 ## Layout
 
-- `src/pages/` — top-level routes (`/`, `/about/`, `/posts/`, `/work/`, `/hire/`, `/now/`, `/rss.xml`, `/404`).
+- `src/pages/` — top-level routes (`/`, `/about/`, `/posts/`, `/work/`, `/now/`, `/rss.xml`, `/404`).
 - `src/content/posts/` — Markdown/MDX posts. Frontmatter schema lives in `src/content.config.ts`.
 - `src/layouts/` — `Base.astro` (chrome) and `Post.astro` (article wrapper).
 - `src/components/` — `SiteHeader.astro`, `SiteFooter.astro`, `AskWidget.astro`.

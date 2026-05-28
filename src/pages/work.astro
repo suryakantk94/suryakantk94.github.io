@@ -3,6 +3,20 @@ import Base from '../layouts/Base.astro';
 
 const cases = [
   {
+    title: 'AIDA — natural-language to PromQL (LLM prototype)',
+    period: 'Kloudfuse · 2023',
+    summary:
+      'Designed and built a prototype natural-language interface for the Kloudfuse metrics product. Took plain-English questions and emitted PromQL, via a vector-DB-backed retrieval pipeline feeding three LLM backends in parallel — BARD (PaLM API), gpt4all running locally on the cluster, and a BARD + ThirdAI retrieval variant. Predated "RAG" being a household term; the pipeline shape is what every "build a chatbot over your docs" tutorial ships today.',
+    impact: [
+      'Reached 4/5 → 5/5 generated-query accuracy on the Kloudfuse-tuned BARD backend; documented the per-model scorecard for nine candidates (GPT-3.5, BARD/PaLM, gpt4all, Alpaca-LoRA, Falcon, Vicuna, Orca, ThirdAI UDT).',
+      'Quantified the production-cost tradeoff: ~$152/month per GKE node, ~60% of a node consumed at peak by the local-retrieval variant — informed the call to lean on managed LLM APIs over self-hosted inference.',
+      'Retrospective post catalogues what aged well (retrieval ≠ generation; prompts don\'t port across models; training data is the bottleneck) and what didn\'t (running parallel backends as a hedge against any single model being too weak).',
+    ],
+    links: [
+      { href: '/posts/aida-natural-language-to-promql/', label: '2023 retrospective' },
+    ],
+  },
+  {
     title: 'Rule-based metric shaping',
     period: 'Kloudfuse · 2026',
     summary:
@@ -43,11 +57,11 @@ const cases = [
 ];
 ---
 
-<Base title="Work — Suryakant Kashyap" description="Selected work and case studies — what shipped, with the numbers.">
+<Base title="Work — Suryakant Kashyap" description="Selected work — LLM prototypes, metrics infrastructure, and the case studies behind them.">
   <article class="prose-post">
     <h1 class="text-3xl font-semibold tracking-tight mb-3">Work</h1>
     <p class="text-lg leading-relaxed text-[color:var(--color-ink-muted)] mb-12">
-      A few selected things I've shipped at <a href="https://www.kloudfuse.com/">Kloudfuse</a>. Most of the technical work lives behind an enterprise login, so this page is a summarised view; each entry links to the public write-ups where they exist.
+      Selected case studies, split across the two halves of the work — the LLM / AI prototypes at the top, the systems infrastructure beneath. Most of this lives behind an enterprise login at <a href="https://www.kloudfuse.com/">Kloudfuse</a>; each entry links to public write-ups where they exist.
     </p>
 
     {cases.map((c) => (

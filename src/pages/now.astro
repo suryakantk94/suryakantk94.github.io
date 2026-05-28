@@ -14,19 +14,21 @@ const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', d
 
     <h2>At work</h2>
     <p>
-      Shipping the configdb-driven metric shaping + derived metrics work at <a href="https://www.kloudfuse.com/">Kloudfuse</a>. The server-side and rule manager pieces are merged; the admin UI, docs, and a follow-up "Drop preview on the list view" UX improvement are in flight.
+      Shipping the configdb-driven metric shaping + derived metrics work at <a href="https://www.kloudfuse.com/">Kloudfuse</a> — the metrics infrastructure half of the day job. The server-side and rule manager pieces are merged; the admin UI, docs, and a follow-up "Drop preview on the list view" UX improvement are in flight. On the AI side, thinking about what an LLM-driven onboarding assistant for the product would look like — given the cost of generating PromQL has dropped 10× since AIDA, the bar is moving.
     </p>
 
     <h2>What I'm reading</h2>
     <ul>
+      <li>Eval-harness papers and post-mortems — how teams actually catch regressions when they swap models. Most of the public writing is still surprisingly thin here.</li>
       <li>The Pinot codebase — specifically the rollup planner and the per-segment query path.</li>
-      <li>Whatever Charity Majors writes about observability and SRE staffing.</li>
+      <li>Anthropic, Cloudflare and the OpenAI cookbook on RAG patterns — comparing the gap between what was hard in 2023 and what's a one-liner now.</li>
       <li>A re-read of <em>Database Internals</em> (Petrov), now with more context about column stores.</li>
     </ul>
 
     <h2>What I'm writing</h2>
     <ul>
-      <li>Slowly turning this site from a content dump into something that feels like a real long-form home.</li>
+      <li>Slowly turning this site from a content dump into something that feels like a real long-form home for both halves of the work — the AI and the systems.</li>
+      <li>A planned follow-up to the AIDA post: what the same prototype would look like if I built it today, and where the actual hard parts live in 2026.</li>
       <li>A planned post on PromQL rollup-table planning — how a query engine decides which resolution to read from, and the failure modes when it picks wrong.</li>
     </ul>
 

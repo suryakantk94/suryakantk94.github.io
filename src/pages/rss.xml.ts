@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'Suryakant Kashyap',
-    description: 'Long-form notes on observability, metrics internals, and production systems.',
+    description: 'Long-form notes on LLMs, retrieval, evals, and the production systems they run on.',
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,
